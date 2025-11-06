@@ -5,6 +5,7 @@ A Twitter-like social platform for stock discussion built with Flask and Postgre
 ## Database Information
 - **PostgreSQL Account**: ku2199
 - **Database**: proj1part2 on 34.139.8.30
+- **Application URL**: http://34.139.50.90:8111/
 
 ## Features Implemented
 
@@ -92,7 +93,7 @@ A Twitter-like social platform for stock discussion built with Flask and Postgre
    python3 server.py
    ```
 
-6. The application will be accessible at `http://<YOUR-VM-IP>:8111/`
+6. The application will be accessible at http://34.139.50.90:8111/
 
 ### Keep Server Running (for mentor meeting):
 ```bash
