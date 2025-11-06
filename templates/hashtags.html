@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Hashtags{% endblock %}
+
+{% block content %}
+    <h1>Popular Hashtags</h1>
+
+    {% if hashtags %}
+        {% for hashtag in hashtags %}
+            <div class="stock-card">
+                <h3 class="hashtag">#{{ hashtag.tag }}</h3>
+                {% if hashtag.description %}
+                    <p>{{ hashtag.description }}</p>
+                {% endif %}
+                <p><strong>Used in {{ hashtag.post_count }} posts</strong></p>
+                <a href="/hashtag/{{ hashtag.tag_id }}">View Posts</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No hashtags yet.</p>
+    {% endif %}
+{% endblock %}

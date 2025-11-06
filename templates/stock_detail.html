@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}${{ stock.ticker }} - {{ stock.name }}{% endblock %}
+
+{% block content %}
+    <h1>${{ stock.ticker }} - {{ stock.name }}</h1>
+    <div class="stock-card">
+        <p><strong>Sector:</strong> {{ stock.sector }}</p>
+        <p><strong>Exchange:</strong> {{ stock.exchange }}</p>
+        <p><strong>Total Mentions:</strong> {{ mention_count }}</p>
+    </div>
+
+    <h2>Posts Mentioning ${{ stock.ticker }}</h2>
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <a href="/profile/{{ post.username }}">@{{ post.username }}</a>
+                </div>
+                <div class="post-content">{{ post.content }}</div>
+                <div class="post-meta">
+                    Posted: {{ post.created_at }} | Likes: {{ post.like_count }} | Comments: {{ post.comment_count }}
+                </div>
+                <div class="post-actions">
+                    {% if current_user %}
+                        <form method="POST" action="/like_post" style="display: inline;">
+                            <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                            <button type="submit">{% if post.user_liked %}Unlike{% else %}Like{% endif %}</button>
+                        </form>
+                    {% endif %}
+                    <a href="/post/{{ post.post_id }}">View Comments</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No posts mentioning this stock yet.</p>
+    {% endif %}
+{% endblock %}

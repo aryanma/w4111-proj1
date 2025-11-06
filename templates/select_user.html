@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Select User{% endblock %}
+
+{% block content %}
+    <h1>Select User</h1>
+    <div class="user-info" style="max-width: 600px; margin: 0 auto;">
+        <form method="POST" action="/select_user">
+            <div class="form-group">
+                <label>Choose a user to log in as:</label>
+                <select name="username" required style="margin-bottom: 15px;">
+                    <option value="">-- Select a user --</option>
+                    {% for user in users %}
+                        <option value="{{ user.username }}">{{ user.username }} ({{ user.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 16px;">Login</button>
+        </form>
+    </div>
+{% endblock %}

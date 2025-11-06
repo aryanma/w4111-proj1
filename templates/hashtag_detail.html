@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}#{{ hashtag.tag }}{% endblock %}
+
+{% block content %}
+    <h1 class="hashtag">#{{ hashtag.tag }}</h1>
+    {% if hashtag.description %}
+        <p>{{ hashtag.description }}</p>
+    {% endif %}
+
+    <h2>Posts with #{{ hashtag.tag }}</h2>
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    <a href="/profile/{{ post.username }}">@{{ post.username }}</a>
+                </div>
+                <div class="post-content">{{ post.content }}</div>
+                <div class="post-meta">
+                    Posted: {{ post.created_at }} | Likes: {{ post.like_count }} | Comments: {{ post.comment_count }}
+                </div>
+                <div class="post-actions">
+                    {% if current_user %}
+                        <form method="POST" action="/like_post" style="display: inline;">
+                            <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                            <button type="submit">{% if post.user_liked %}Unlike{% else %}Like{% endif %}</button>
+                        </form>
+                    {% endif %}
+                    <a href="/post/{{ post.post_id }}">View Comments</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No posts with this hashtag yet.</p>
+    {% endif %}
+{% endblock %}

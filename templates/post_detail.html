@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Post Details{% endblock %}
+
+{% block content %}
+    <h1>Post Details</h1>
+    <a href="/">&larr; Back to Feed</a>
+
+    <div class="post" style="margin-top: 20px;">
+        <div class="post-header">
+            <a href="/profile/{{ post.username }}">@{{ post.username }}</a>
+            {% if post.tickers %}
+                - mentioned:
+                {% for ticker in post.tickers.split(',') %}
+                    <a href="/stock/{{ ticker }}" class="stock-ticker">${{ ticker }}</a>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="post-content">{{ post.content }}</div>
+        <div class="post-meta">
+            Posted: {{ post.created_at }} | Likes: {{ post.like_count }} | Comments: {{ post.comment_count }}
+        </div>
+        <div class="post-actions">
+            <form method="POST" action="/like_post" style="display: inline;">
+                <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                <button type="submit">{% if post.user_liked %}Unlike{% else %}Like{% endif %}</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Comments</h2>
+    {% if current_user %}
+        <div class="user-info">
+            <h3>Add a Comment</h3>
+            <form method="POST" action="/add_comment">
+                <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                <div class="form-group">
+                    <textarea name="content" required placeholder="Write your comment..."></textarea>
+                </div>
+                <button type="submit" class="btn">Comment</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="comment">
+                <strong><a href="/profile/{{ comment.username }}">@{{ comment.username }}</a></strong>
+                <div>{{ comment.content }}</div>
+                <div class="post-meta">{{ comment.created_at }}</div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endif %}
+{% endblock %}

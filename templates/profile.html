@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+    <h1>@{{ user.username }}'s Profile</h1>
+    <div class="user-info">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        {% if user.biography %}
+            <p><strong>Bio:</strong> {{ user.biography }}</p>
+        {% endif %}
+        <div class="stats">
+            <div class="stat">Posts: {{ stats.post_count }}</div>
+            <div class="stat">Followers: {{ stats.follower_count }}</div>
+            <div class="stat">Following: {{ stats.following_count }}</div>
+        </div>
+        {% if current_user and current_user != user.username %}
+            <form method="POST" action="/follow" style="margin-top: 15px;">
+                <input type="hidden" name="username" value="{{ user.username }}">
+                <button type="submit" class="btn">
+                    {% if is_following %}Unfollow{% else %}Follow{% endif %}
+                </button>
+            </form>
+        {% endif %}
+    </div>
+
+    <h2>Posts by @{{ user.username }}</h2>
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <div class="post-header">
+                    {% if post.tickers %}
+                        Mentioned:
+                        {% for ticker in post.tickers.split(',') %}
+                            <a href="/stock/{{ ticker }}" class="stock-ticker">${{ ticker }}</a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="post-content">{{ post.content }}</div>
+                <div class="post-meta">
+                    Posted: {{ post.created_at }} | Likes: {{ post.like_count }} | Comments: {{ post.comment_count }}
+                </div>
+                <div class="post-actions">
+                    <a href="/post/{{ post.post_id }}">View Comments</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No posts yet.</p>
+    {% endif %}
+{% endblock %}

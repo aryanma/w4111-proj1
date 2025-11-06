@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Stock Social Platform{% endblock %}
+
+{% block content %}
+    <h1>Stock Social Platform</h1>
+
+    {% if session.error %}
+        <div class="error">{{ session.error }}</div>
+        {{ session.pop('error') if session else '' }}
+    {% endif %}
+    {% if session.success %}
+        <div class="success">{{ session.success }}</div>
+        {{ session.pop('success') if session else '' }}
+    {% endif %}
+
+    {% if not current_user %}
+        <div class="user-info">
+            <h3>Welcome! Please select a user to continue.</h3>
+            <a href="/select_user" class="btn">Select User</a>
+        </div>
+    {% else %}
+        <div class="user-info">
+            <h3>Create a Post</h3>
+            <form method="POST" action="/create_post">
+                <div class="form-group">
+                    <label>Post Content (mention stocks with $ like $AAPL):</label>
+                    <textarea name="content" required minlength="5" maxlength="500" placeholder="What's happening in the markets? (5-500 characters)"></textarea>
+                    <small style="color: #666;">Minimum 5 characters, maximum 500 characters</small>
+                </div>
+                <button type="submit" class="btn">Post</button>
+            </form>
+        </div>
+
+        <h2>Recent Posts</h2>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <a href="/profile/{{ post.username }}">@{{ post.username }}</a>
+                        {% if post.tickers %}
+                            - mentioned:
+                            {% for ticker in post.tickers.split(',') %}
+                                <a href="/stock/{{ ticker }}" class="stock-ticker">${{ ticker }}</a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="post-content">{{ post.content }}</div>
+                    <div class="post-meta">
+                        Posted: {{ post.created_at }} | Likes: {{ post.like_count }} | Comments: {{ post.comment_count }}
+                    </div>
+                    <div class="post-actions">
+                        <form method="POST" action="/like_post" style="display: inline;">
+                            <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                            <button type="submit">{% if post.user_liked %}Unlike{% else %}Like{% endif %}</button>
+                        </form>
+                        <a href="/post/{{ post.post_id }}">View Comments</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts yet. Be the first to post!</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

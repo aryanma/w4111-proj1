@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Trending Stocks{% endblock %}
+
+{% block content %}
+    <h1>Trending Stocks</h1>
+    <p>Stocks ranked by number of mentions in posts</p>
+
+    {% if trending_stocks %}
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Ticker</th>
+                <th>Name</th>
+                <th>Sector</th>
+                <th>Mentions</th>
+                <th>Actions</th>
+            </tr>
+            {% for stock in trending_stocks %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><strong>${{ stock.ticker }}</strong></td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.sector }}</td>
+                    <td>{{ stock.mention_count }}</td>
+                    <td><a href="/stock/{{ stock.ticker }}">View Posts</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No trending stocks yet.</p>
+    {% endif %}
+{% endblock %}
